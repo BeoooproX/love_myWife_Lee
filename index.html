@@ -2,220 +2,399 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Bạn có 1 tin nhắn</title>
-
+<title>Thông báo đặc biệt cho bà xã 💌</title>
+<link rel="icon" type="image/webp" href="https://raw.githubusercontent.com/guiyeuthuong/love/main/uploads/1749688410048_favicon.webp">
 <style>
 
 body{
-background:#ffd6e7;
-font-family:Arial;
-text-align:center;
 margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:sans-serif;
+overflow:hidden;
+
+background:linear-gradient(-45deg,#f3a6c3,#f7cfd9,#f3a6c3,#ffd6e7);
+background-size:400% 400%;
+animation:bgmove 12s ease infinite;
 }
 
-#box{
+@keyframes bgmove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
 
-background:white;
-width:90%;
-max-width:420px;
-
-margin:auto;
-margin-top:80px;
-
-padding:30px;
-
-border-radius:20px;
-
-box-shadow:0 0 15px rgba(0,0,0,0.1);
-
+.container{
+text-align:center;
 position:relative;
+}
 
+img{
+width:160px;
+border-radius:20px;
 }
 
 button{
-
-padding:12px 22px;
-
+padding:12px 25px;
 border:none;
-
 border-radius:12px;
-
-cursor:pointer;
-
-margin:10px;
-
 font-size:18px;
-
+cursor:pointer;
+margin:8px;
 }
 
 #yesBtn{
-background:#00c853;
+background:#28a745;
 color:white;
 }
 
 #noBtn{
-
-background:#ff1744;
+background:#dc3545;
 color:white;
-
-position:absolute;
-
-left:220px;
-top:140px;
-
+position:fixed;
 }
 
-#talk{
-
-margin-top:20px;
-font-weight:bold;
-color:#ff4081;
-
+.bigYes{
+width:80vw;
+font-size:28px;
+transform:scale(1.15);
 }
 
-#messageBox{
-
+.hidden{
 display:none;
-margin-top:20px;
-
 }
 
-input{
+form{
+background:#f7cfd9;
+padding:20px;
+border-radius:15px;
+width:320px;
+margin:auto;
+}
 
-width:80%;
-padding:10px;
-
+textarea{
+width:90%;
+height:100px;
 border-radius:10px;
 border:1px solid #ccc;
+padding:10px;
+}
 
+.heart{
+position:fixed;
+pointer-events:none;
+animation:fall linear forwards,spin 4s linear infinite;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh) translateX(0);}
+100%{transform:translateY(110vh) translateX(40px);}
+}
+
+@keyframes spin{
+from{rotate:0deg}
+to{rotate:360deg}
+}
+
+#musicToggle{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#ff6b9a;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:12px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="box">
+<div class="container" id="screen1">
 
-<h2>Bạn có 1 tin nhắn 💌</h2>
+<img id="mainImg"
+src="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/1751616035231_love.gif">
 
-<button id="yesBtn">Đồng ý ❤️</button>
+<h2 id="loveText">Cảm ơn vợ vì đã luôn ở bên cạnh ông xã <3
+Ngày 14/3 này, cho chồng được yêu chiều vợ thêm một chút nhó ạ ❤️</h2>
 
-<button id="noBtn">Không đâu 😜</button>
-
-<div id="talk"></div>
-
-<div id="messageBox">
-
-<input id="msg" placeholder="Lời nhắn của bạn">
-
-<br>
-
-<button id="sendBtn">Gửi</button>
-
-<div id="sent"></div>
+<button id="yesBtn">Đồng ý nè 😘</button>
+<button id="noBtn">Từ chối 🙅‍♀️</button>
 
 </div>
 
+
+<div class="container hidden" id="screen4">
+
+<img src="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/1751505646164_wedding.gif">
+
+<h2>
+Chốt đơn thành công 🎉<br>
+Hôm nay vợ chỉ cần xinh đẹp, còn lại để chồng lo ạ ❤️
+</h2>
+
+<form onsubmit="sendMessage(event)">
+
+<p>📩 Lời nhắn của bà xã nạ:</p>
+
+<textarea id="msg"></textarea>
+
+<br><br>
+
+<button type="submit" style="background:#4da3ff;color:white">
+✈ Gửi
+</button>
+
+</form>
+
 </div>
 
+<button id="musicToggle">🔊 Nhạc</button>
+
+<audio id="bgMusic" loop preload="auto">
+<source src="https://files.catbox.moe/3v7h9b.mp3" type="audio/mpeg">
+</audio>
 <script>
 
 
-const noBtn = document.getElementById("noBtn")
-const yesBtn = document.getElementById("yesBtn")
-const talk = document.getElementById("talk")
-const messageBox = document.getElementById("messageBox")
+// ảnh
+
+const happyImg="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/1751616035231_love.gif"
+const cryImg="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/1751453048485_sad.gif"
 
 
-const texts = [
+const noBtn=document.getElementById("noBtn")
+const yesBtn=document.getElementById("yesBtn")
+const mainImg=document.getElementById("mainImg")
 
-"Thôi mà 🥺",
-"Đừng từ chối anh",
-"Cho anh cơ hội đi",
-"Anh thích em thật mà",
-"Em nhấn đồng ý đi ❤️",
-"Anh buồn đó 😭",
-"Đừng làm anh thất vọng",
-"Thật sự không đồng ý sao 😢"
 
+const texts=[
+"Suy nghĩ lại đi vợ ơi 🥺",
+"Đừng mà 🥺",
+"Thử lại nha xã ",
+"14/3 là dành cho vợ đó ❤️",
+"Đừng từ chối mà",
+"Bấm đồng ý đi bà xã",
+"Chồng năn nỉ luôn đó 😭"
 ]
 
-
-let index = 0
+let index=0
 
 
 function moveButton(){
 
-// nếu hết câu thì ẩn nút
+mainImg.src=cryImg
 
-if(index >= texts.length){
+if(index>=texts.length){
 
 noBtn.style.display="none"
+
+yesBtn.classList.add("bigYes")
+
+mainImg.src=happyImg
 
 return
 
 }
 
-
-// đổi text
-
-noBtn.innerText = texts[index]
+noBtn.innerText=texts[index]
 
 index++
 
+let vw=window.innerWidth
+let vh=window.innerHeight
 
-// nhảy vị trí
+let btnW=noBtn.offsetWidth
+let btnH=noBtn.offsetHeight
 
-let x = Math.random()*250
-let y = Math.random()*200
+let x=Math.random()*(vw-btnW)
+let y=Math.random()*(vh-btnH)
 
-noBtn.style.left = x + "px"
-noBtn.style.top = y + "px"
+noBtn.style.left=x+"px"
+noBtn.style.top=y+"px"
 
 }
 
 
-// desktop
+document.addEventListener("mousemove",(e)=>{
 
-noBtn.addEventListener("mouseover", moveButton)
+let rect=noBtn.getBoundingClientRect()
+
+let dist=Math.hypot(
+e.clientX-(rect.left+rect.width/2),
+e.clientY-(rect.top+rect.height/2)
+)
+
+if(dist<120){
+
+moveButton()
+
+}
+
+})
 
 
-// mobile
+document.addEventListener("touchmove",(e)=>{
 
-noBtn.addEventListener("touchstart", moveButton)
+let rect=noBtn.getBoundingClientRect()
+
+let t=e.touches[0]
+
+let dist=Math.hypot(
+t.clientX-(rect.left+rect.width/2),
+t.clientY-(rect.top+rect.height/2)
+)
+
+if(dist<120){
+
+moveButton()
+
+}
+
+})
+
+
+// khi hover đồng ý
+
+yesBtn.addEventListener("mouseover",()=>{
+
+mainImg.src=happyImg
+
+})
+
+yesBtn.addEventListener("touchstart",()=>{
+
+mainImg.src=happyImg
+
+})
 
 
 // đồng ý
 
 yesBtn.onclick=function(){
 
-talk.innerHTML="Yayyy ❤️ Anh biết mà!"
+document.getElementById("screen1").classList.add("hidden")
 
-messageBox.style.display="block"
+document.getElementById("screen4").classList.remove("hidden")
+
+startHearts()
+
+startMusic()
 
 }
 
 
-// gửi tin
+// tim
 
-document.getElementById("sendBtn").onclick=function(){
+function startHearts(){
+
+setInterval(()=>{
+
+let heart=document.createElement("img")
+
+heart.src="https://cdn-icons-png.flaticon.com/512/833/833472.png"
+
+heart.className="heart"
+
+heart.style.width=(18+Math.random()*25)+"px"
+
+heart.style.left=Math.random()*100+"vw"
+
+heart.style.animationDuration=(5+Math.random()*4)+"s"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>heart.remove(),8000)
+
+},200)
+
+}
+
+
+// nhạc
+
+const music=document.getElementById("bgMusic")
+const toggle=document.getElementById("musicToggle")
+
+let playing=true
+
+function startMusic(){
+
+const music=document.getElementById("bgMusic")
+
+music.volume=0.1
+
+music.play().catch(()=>{})
+
+let vol=0.1
+
+let fade=setInterval(()=>{
+
+vol+=0.05
+
+if(vol>=1){
+
+music.volume=1
+clearInterval(fade)
+
+}else{
+
+music.volume=vol
+
+}
+
+},200)
+
+}
+
+toggle.onclick=function(){
+
+if(playing){
+
+music.pause()
+
+toggle.innerText="🔇"
+
+}else{
+
+music.play()
+
+toggle.innerText="🔊"
+
+}
+
+playing=!playing
+
+}
+
+
+// telegram
+
+const BOT_TOKEN="8485411939:AAFqRsv6AqPCy2fKhCV9XxMwdJ6cy48LCJQ"
+const CHAT_ID="1942854380"
+
+
+async function sendMessage(e){
+
+e.preventDefault()
 
 let msg=document.getElementById("msg").value
 
-if(msg===""){
+fetch(
+"https://api.telegram.org/bot"+
+BOT_TOKEN+
+"/sendMessage?chat_id="+
+CHAT_ID+
+"&text="+encodeURIComponent("💌 Lời nhắn:\n"+msg)
+)
 
-alert("Hãy nhập lời nhắn")
-
-return
+alert("Đã gửi ❤️")
 
 }
-
-document.getElementById("sent").innerHTML="✅ Đã gửi lời nhắn!"
-
-}
-
 
 </script>
 
