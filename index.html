@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
 <meta charset="UTF-8">
 <title>Bạn có 1 tin nhắn</title>
 
@@ -11,32 +10,19 @@ body{
 background:#ffd6e7;
 font-family:Arial;
 text-align:center;
-overflow:hidden;
-}
-
-#loading{
-
-margin-top:150px;
-
-}
-
-#cute{
-
-display:none;
-width:200px;
-margin-top:30px;
-
+margin:0;
 }
 
 #box{
 
-display:none;
-
 background:white;
 
-width:420px;
+width:90%;
+max-width:420px;
 
 margin:auto;
+
+margin-top:80px;
 
 padding:30px;
 
@@ -45,6 +31,63 @@ border-radius:20px;
 box-shadow:0 0 15px rgba(0,0,0,0.1);
 
 position:relative;
+
+}
+
+h2{
+margin-bottom:20px;
+}
+
+button{
+
+padding:12px 22px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+margin:10px;
+
+font-size:18px;
+
+}
+
+#yesBtn{
+
+background:#00c853;
+color:white;
+
+}
+
+#noBtn{
+
+background:#ff1744;
+color:white;
+
+position:absolute;
+
+left:220px;
+top:140px;
+
+}
+
+#talk{
+
+margin-top:20px;
+
+font-weight:bold;
+
+color:#ff4081;
+
+}
+
+#messageBox{
+
+display:none;
+
+margin-top:20px;
 
 }
 
@@ -60,65 +103,10 @@ border:1px solid #ccc;
 
 }
 
-button{
+#sendBtn{
 
-padding:10px 20px;
-
-border:none;
-
-border-radius:10px;
-
-cursor:pointer;
-
-margin-top:10px;
-
-transition:0.2s;
-
-}
-
-#yes{
-
-background:#00c853;
-
+background:#ff4081;
 color:white;
-
-font-size:18px;
-
-}
-
-#no{
-
-background:#ff1744;
-
-color:white;
-
-position:absolute;
-
-left:230px;
-
-top:260px;
-
-}
-
-#talk{
-
-margin-top:15px;
-
-font-weight:bold;
-
-color:#ff4081;
-
-}
-
-canvas{
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-pointer-events:none;
 
 }
 
@@ -128,69 +116,100 @@ pointer-events:none;
 
 <body>
 
-<div id="loading">
-
-<img width="160"
-src="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/1751420656500_dangtaiyeuthuong.gif">
-
-<p>Đang tải yêu thương...</p>
-
-</div>
-
-<img id="cute"
-src="https://raw.githubusercontent.com/guiyeuthuong/love/main/img/175161035231_love.gif">
-
 <div id="box">
 
 <h2>Bạn có 1 tin nhắn 💌</h2>
+
+<button id="yesBtn">Đồng ý ❤️</button>
+
+<button id="noBtn">Không đâu 😜</button>
+
+<div id="talk"></div>
+
+<div id="messageBox">
 
 <input id="msg" placeholder="Lời nhắn của bạn">
 
 <br>
 
-<button onclick="send()">Gửi</button>
+<button id="sendBtn">Gửi</button>
 
 <div id="sent"></div>
 
-<br><br>
-
-<button id="yes">Đồng ý ❤️</button>
-
-<button id="no">Không đồng ý 🤷‍♀️</button>
-
-<div id="talk"></div>
+</div>
 
 </div>
 
-<canvas id="heart"></canvas>
-
 <script>
 
+const noBtn = document.getElementById("noBtn")
+const yesBtn = document.getElementById("yesBtn")
+const talk = document.getElementById("talk")
+const messageBox = document.getElementById("messageBox")
 
-// loading
+const texts = [
 
-window.onload=function(){
+"Anh buồn đó 🥺",
+"Đừng từ chối mà 😭",
+"Cho anh cơ hội đi",
+"Anh thích em thật mà",
+"Nhấn đồng ý đi ❤️",
+"Đừng làm anh thất vọng",
+"Thử lại lần nữa nha",
+"Thật sự không đồng ý sao 😢"
 
-setTimeout(function(){
+]
 
-loading.style.display="none"
+let i = 0
 
-cute.style.display="block"
 
-box.style.display="block"
+function moveButton(){
 
-},2000)
+let x = Math.random()*250
+let y = Math.random()*200
+
+noBtn.style.left = x + "px"
+noBtn.style.top = y + "px"
+
+noBtn.innerText = texts[i]
+
+i++
+
+if(i >= texts.length){
+i = 0
+}
+
+}
+
+
+// desktop hover
+
+noBtn.addEventListener("mouseover", moveButton)
+
+
+// mobile touch
+
+noBtn.addEventListener("touchstart", moveButton)
+
+
+// đồng ý
+
+yesBtn.onclick = function(){
+
+talk.innerHTML = "Yayyy ❤️ Anh biết mà!"
+
+messageBox.style.display = "block"
 
 }
 
 
 // gửi tin
 
-function send(){
+document.getElementById("sendBtn").onclick = function(){
 
-let v=msg.value
+let msg = document.getElementById("msg").value
 
-if(v===""){
+if(msg === ""){
 
 alert("Hãy nhập lời nhắn")
 
@@ -198,160 +217,7 @@ return
 
 }
 
-sent.innerHTML="✅ Đã gửi lời nhắn!"
-
-}
-
-
-// câu nói
-
-let texts=[
-
-"Đừng từ chối mà 🥺",
-
-"Anh buồn đó 😭",
-
-"Cho anh cơ hội đi",
-
-"Anh thích em thật mà",
-
-"Nhấn đồng ý đi ❤️",
-
-"Đừng làm anh thất vọng",
-
-"Thử lại lần nữa nha",
-
-"Thật sự không đồng ý sao 😢"
-
-]
-
-let i=0
-
-
-// nút chạy trốn
-
-let no=document.getElementById("no")
-
-let yes=document.getElementById("yes")
-
-no.addEventListener("mouseover",function(){
-
-let x=Math.random()*350
-
-let y=Math.random()*250
-
-no.style.left=x+"px"
-
-no.style.top=y+"px"
-
-talk.innerHTML=texts[i]
-
-i++
-
-if(i>=texts.length)i=0
-
-
-// yes to hơn
-
-let size=parseInt(window.getComputedStyle(yes).fontSize)
-
-yes.style.fontSize=(size+2)+"px"
-
-
-// no nhỏ lại
-
-let size2=parseInt(window.getComputedStyle(no).fontSize)
-
-no.style.fontSize=(size2-1)+"px"
-
-})
-
-
-// đồng ý
-
-yes.onclick=function(){
-
-talk.innerHTML="Yayyy ❤️ Anh biết mà!"
-
-firework()
-
-}
-
-
-
-// mưa trái tim
-
-const canvas=document.getElementById("heart")
-
-const ctx=canvas.getContext("2d")
-
-canvas.width=window.innerWidth
-
-canvas.height=window.innerHeight
-
-let hearts=[]
-
-function createHeart(){
-
-hearts.push({
-
-x:Math.random()*canvas.width,
-
-y:-10,
-
-size:10+Math.random()*10,
-
-speed:1+Math.random()*2
-
-})
-
-}
-
-function drawHearts(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-ctx.fillStyle="red"
-
-hearts.forEach((h,index)=>{
-
-ctx.beginPath()
-
-ctx.arc(h.x,h.y,h.size/2,0,Math.PI*2)
-
-ctx.fill()
-
-h.y+=h.speed
-
-if(h.y>canvas.height){
-
-hearts.splice(index,1)
-
-}
-
-})
-
-}
-
-setInterval(createHeart,300)
-
-function animate(){
-
-drawHearts()
-
-requestAnimationFrame(animate)
-
-}
-
-animate()
-
-
-
-// pháo hoa
-
-function firework(){
-
-alert("Cô ấy đã đồng ý ❤️")
+document.getElementById("sent").innerHTML = "✅ Đã gửi lời nhắn!"
 
 }
 
