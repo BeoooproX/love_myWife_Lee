@@ -16,12 +16,10 @@ margin:0;
 #box{
 
 background:white;
-
 width:90%;
 max-width:420px;
 
 margin:auto;
-
 margin-top:80px;
 
 padding:30px;
@@ -32,10 +30,6 @@ box-shadow:0 0 15px rgba(0,0,0,0.1);
 
 position:relative;
 
-}
-
-h2{
-margin-bottom:20px;
 }
 
 button{
@@ -55,10 +49,8 @@ font-size:18px;
 }
 
 #yesBtn{
-
 background:#00c853;
 color:white;
-
 }
 
 #noBtn{
@@ -76,9 +68,7 @@ top:140px;
 #talk{
 
 margin-top:20px;
-
 font-weight:bold;
-
 color:#ff4081;
 
 }
@@ -86,7 +76,6 @@ color:#ff4081;
 #messageBox{
 
 display:none;
-
 margin-top:20px;
 
 }
@@ -94,19 +83,10 @@ margin-top:20px;
 input{
 
 width:80%;
-
 padding:10px;
 
 border-radius:10px;
-
 border:1px solid #ccc;
-
-}
-
-#sendBtn{
-
-background:#ff4081;
-color:white;
 
 }
 
@@ -142,28 +122,51 @@ color:white;
 
 <script>
 
+
 const noBtn = document.getElementById("noBtn")
 const yesBtn = document.getElementById("yesBtn")
 const talk = document.getElementById("talk")
 const messageBox = document.getElementById("messageBox")
 
+
 const texts = [
 
-"Anh buồn đó 🥺",
-"Đừng từ chối mà 😭",
+"Thôi mà 🥺",
+"Đừng từ chối anh",
 "Cho anh cơ hội đi",
 "Anh thích em thật mà",
-"Nhấn đồng ý đi ❤️",
+"Em nhấn đồng ý đi ❤️",
+"Anh buồn đó 😭",
 "Đừng làm anh thất vọng",
-"Thử lại lần nữa nha",
 "Thật sự không đồng ý sao 😢"
 
 ]
 
-let i = 0
+
+let index = 0
 
 
 function moveButton(){
+
+// nếu hết câu thì ẩn nút
+
+if(index >= texts.length){
+
+noBtn.style.display="none"
+
+return
+
+}
+
+
+// đổi text
+
+noBtn.innerText = texts[index]
+
+index++
+
+
+// nhảy vị trí
 
 let x = Math.random()*250
 let y = Math.random()*200
@@ -171,45 +174,37 @@ let y = Math.random()*200
 noBtn.style.left = x + "px"
 noBtn.style.top = y + "px"
 
-noBtn.innerText = texts[i]
-
-i++
-
-if(i >= texts.length){
-i = 0
-}
-
 }
 
 
-// desktop hover
+// desktop
 
 noBtn.addEventListener("mouseover", moveButton)
 
 
-// mobile touch
+// mobile
 
 noBtn.addEventListener("touchstart", moveButton)
 
 
 // đồng ý
 
-yesBtn.onclick = function(){
+yesBtn.onclick=function(){
 
-talk.innerHTML = "Yayyy ❤️ Anh biết mà!"
+talk.innerHTML="Yayyy ❤️ Anh biết mà!"
 
-messageBox.style.display = "block"
+messageBox.style.display="block"
 
 }
 
 
 // gửi tin
 
-document.getElementById("sendBtn").onclick = function(){
+document.getElementById("sendBtn").onclick=function(){
 
-let msg = document.getElementById("msg").value
+let msg=document.getElementById("msg").value
 
-if(msg === ""){
+if(msg===""){
 
 alert("Hãy nhập lời nhắn")
 
@@ -217,9 +212,10 @@ return
 
 }
 
-document.getElementById("sent").innerHTML = "✅ Đã gửi lời nhắn!"
+document.getElementById("sent").innerHTML="✅ Đã gửi lời nhắn!"
 
 }
+
 
 </script>
 
